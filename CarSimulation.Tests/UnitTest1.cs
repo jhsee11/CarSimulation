@@ -45,7 +45,7 @@ public class UnitTest1
     }
 
     [Fact]
-    public void MoveCarPosition()
+    public void MoveCarPosition_MoveForward_ReturnsCorrectPosition()
     {
         var carA = new Car("A");
 
@@ -57,5 +57,35 @@ public class UnitTest1
         _output.WriteLine("hello");
 
         Assert.Equal((1, 4, Car.Direction.N), carA.CarPosition);
+    }
+
+    [Fact]
+    public void MoveCarPosition_WhenNorthMoveRightForward_ReturnsCorrectPosition()
+    {
+        var carA = new Car("A");
+
+        carA.SetCarPosition(1, 1, Car.Direction.N);
+
+        carA.MoveCar("RFFF");
+
+        _output.WriteLine(carA.CarPosition.ToString());
+        _output.WriteLine("hello");
+
+        Assert.Equal((4, 1, Car.Direction.E), carA.CarPosition);
+    }
+
+    [Fact]
+    public void MoveCarPosition_WhenNorthMoveLeftForward_ReturnsCorrectPosition()
+    {
+        var carA = new Car("A");
+
+        carA.SetCarPosition(5, 5, Car.Direction.N);
+
+        carA.MoveCar("LFFF");
+
+        _output.WriteLine(carA.CarPosition.ToString());
+        _output.WriteLine("hello");
+
+        Assert.Equal((2, 5, Car.Direction.W), carA.CarPosition);
     }
 }

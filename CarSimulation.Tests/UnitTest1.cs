@@ -16,7 +16,8 @@ public class UnitTest1
     [Fact]
     public void CreateCarField_ReturnsCorrectCarField()
     {
-        var newCarField = new CarField(5, 5);
+        var newCarField = new CarField();
+        newCarField.FieldDimension = (5, 5);
 
         Assert.Equal((5, 5), newCarField.FieldDimension);
     }
@@ -24,9 +25,11 @@ public class UnitTest1
     [Fact]
     public void AddCar_ReturnsCorrectCarList()
     {
-        var newCarField = new CarField(5, 5);
+        var newCarField = new CarField();
+        newCarField.FieldDimension = (5, 5);
 
-        var carA = new Car("A");
+        var carA = new Car();
+        carA.CarName = "A";
 
         newCarField.AddCar(carA);
 
@@ -37,55 +40,116 @@ public class UnitTest1
     [Fact]
     public void SetCarPosition()
     {
-        var carA = new Car("A");
+        var carA = new Car();
+        carA.CarName = "A";
 
-        carA.SetCarPosition(1, 3, Car.Direction.N);
+        carA.CarPosition = (1, 3, Car.Direction.N);
 
         Assert.Equal((1, 3, Car.Direction.N), carA.CarPosition);
     }
 
     [Fact]
-    public void MoveCarPosition_MoveForward_ReturnsCorrectPosition()
+    public void MoveCarPosition_WhenOneCarFromNorthMoveForward_ReturnsCorrectPosition()
     {
-        var carA = new Car("A");
+        var carA = new Car();
 
-        carA.SetCarPosition(1, 1, Car.Direction.N);
+        carA.CarPosition =  (1, 1, Car.Direction.N);
+        carA.Commands = "FFF";
 
-        carA.MoveCar("FFF");
+        var newCarField = new CarField();
+        newCarField.FieldDimension = (5, 5);
 
-        _output.WriteLine(carA.CarPosition.ToString());
-        _output.WriteLine("hello");
+        newCarField.AddCar(carA);
 
-        Assert.Equal((1, 4, Car.Direction.N), carA.CarPosition);
+        var carList = newCarField.RunSimulation();
+
+       // _output.WriteLine(carA.CarPosition.ToString());
+       //  _output.WriteLine("hello");
+
+        Assert.Equal((1, 4, Car.Direction.N), carList[0].CarPosition);
     }
 
     [Fact]
-    public void MoveCarPosition_WhenNorthMoveRightForward_ReturnsCorrectPosition()
+    public void MoveCarPosition_WhenOneCarFromNorthMoveRightForward_ReturnsCorrectPosition()
     {
-        var carA = new Car("A");
+        var carA = new Car();
 
-        carA.SetCarPosition(1, 1, Car.Direction.N);
+        carA.CarPosition = (1, 1, Car.Direction.N);
+        carA.Commands = "RFFF";
 
-        carA.MoveCar("RFFF");
+        var newCarField = new CarField();
+        newCarField.FieldDimension = (5, 5);
 
-        _output.WriteLine(carA.CarPosition.ToString());
-        _output.WriteLine("hello");
+        newCarField.AddCar(carA);
 
-        Assert.Equal((4, 1, Car.Direction.E), carA.CarPosition);
+        var carList = newCarField.RunSimulation();
+
+        // _output.WriteLine(carA.CarPosition.ToString());
+        //  _output.WriteLine("hello");
+
+        Assert.Equal((4, 1, Car.Direction.E), carList[0].CarPosition);
     }
 
     [Fact]
-    public void MoveCarPosition_WhenNorthMoveLeftForward_ReturnsCorrectPosition()
+    public void MoveCarPosition_WhenOneCarFromNorthMoveLeftForward_ReturnsCorrectPosition()
     {
-        var carA = new Car("A");
+        var carA = new Car();
 
-        carA.SetCarPosition(5, 5, Car.Direction.N);
+        carA.CarPosition = (5, 5, Car.Direction.N);
+        carA.Commands = "LFFF";
 
-        carA.MoveCar("LFFF");
+        var newCarField = new CarField();
+        newCarField.FieldDimension = (5, 5);
 
-        _output.WriteLine(carA.CarPosition.ToString());
-        _output.WriteLine("hello");
+        newCarField.AddCar(carA);
 
-        Assert.Equal((2, 5, Car.Direction.W), carA.CarPosition);
+        var carList = newCarField.RunSimulation();
+
+        // _output.WriteLine(carA.CarPosition.ToString());
+        //  _output.WriteLine("hello");
+
+        Assert.Equal((2, 5, Car.Direction.W), carList[0].CarPosition);
+    }
+
+    [Fact]
+    public void MoveCarPosition_WhenOneCarFromNorthMoveExceedBoundary_ReturnsCorrectPosition()
+    {
+        var carA = new Car();
+
+        carA.CarPosition = (5, 5, Car.Direction.N);
+        carA.Commands = "FFFFF";
+
+        var newCarField = new CarField();
+        newCarField.FieldDimension = (5, 5);
+
+        newCarField.AddCar(carA);
+
+        var carList = newCarField.RunSimulation();
+
+        // _output.WriteLine(carA.CarPosition.ToString());
+        //  _output.WriteLine("hello");
+
+        Assert.Equal((5, 5, Car.Direction.N), carList[0].CarPosition);
+    }
+
+    [Fact]
+    public void MoveCarPosition_WhenOneCarFromNorthMoveForwardLeftForward_ReturnsCorrectPosition()
+    {
+        var carA = new Car();
+
+        carA.CarPosition = (5, 5, Car.Direction.N);
+        carA.Commands = "FFFFFLF";
+
+        var newCarField = new CarField();
+        newCarField.FieldDimension = (5, 5);
+
+        newCarField.AddCar(carA);
+
+        var carList = newCarField.RunSimulation();
+
+        // _output.WriteLine(carA.CarPosition.ToString());
+        //  _output.WriteLine("hello");
+
+        Assert.Equal((4, 5, Car.Direction.W), carList[0].CarPosition);
     }
 }

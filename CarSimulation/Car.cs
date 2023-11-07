@@ -3,65 +3,42 @@ namespace CarSimulation
 {
 	public class Car
 	{
-		public string CarName { get; set; }
+		public string CarName { get; set; } = "";
 
 		public enum Direction { N, S, W, E };
 
-		public Dictionary<string, Dictionary<string, string>> directionMapping = new Dictionary<string, Dictionary<string, string>>
+		private (int x, int y, Direction) _carPosition;
+
+		public (int x, int y, Direction) CarPosition
 		{
+			get { return _carPosition; }
+			set
 			{
-				"N", new Dictionary<string, string>
+				if (value.x >= 0 && value.y >= 0)
 				{
-					{ "L", "W" },
-					{ "R", "E" }
+					_carPosition = value;
 				}
-			},
-			{
-				"S", new Dictionary<string, string>
+				else
 				{
-					{ "L", "E" },
-					{ "R", "W" }
+					//do nth here
 				}
-			},
-            {
-                "W", new Dictionary<string, string>
-                {
-                    { "L", "S" },
-                    { "R", "N" }
-                }
-            },
-            {
-                "E", new Dictionary<string, string>
-                {
-                    { "L", "N" },
-                    { "R", "S" }
-                }
-            }
-        };
-
-		public Dictionary<string, Tuple<int, int>> moveMapping = new Dictionary<string, Tuple<int, int>>
-		{
-			{  "N", new Tuple<int,int>(0,1) },
-			{  "S", new Tuple<int,int>(0,-1) },
-			{  "W", new Tuple<int,int>(-1,0) },
-			{  "E", new Tuple<int,int>(1,0) }
-		};
-
-		public (int x, int y, Direction) CarPosition { get; set; }
-
-		public char[] Commands { get; set; }
-
-		public Car(string carName)
-		{
-			CarName = carName;
+			}
 		}
 
+		public string Commands { get; set; } = "";
+
+		public Car()
+		{
+		}
+
+		/*
         public void SetCarPosition(int x, int y, Direction direction)
 		{
             CarPosition = (x, y, direction);
-		}
+		}*/
 
-		public void MoveCar( string commands )
+		/*
+		public void MoveCarBackUp( string commands )
 		{
 			var commandList = commands.ToCharArray();
 			string currFacingDir;
@@ -91,6 +68,7 @@ namespace CarSimulation
 				}
             }
 		}
+		*/
 	}
 }
 

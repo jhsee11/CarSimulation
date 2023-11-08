@@ -10,11 +10,6 @@ namespace CarSimulation
 
 		public List<Car> CarList { get; set; } = new List<Car>();
 
-		public CarField()
-		{
-			
-		}
-
 		public void AddCar ( Car newCar)
 		{
 			CarList.Add(newCar);
@@ -64,51 +59,60 @@ namespace CarSimulation
 		{
             bool successFlag = true;
 
-            /*
-            // simulate to add car
-            var carA = new Car();
-            carA.CarName = "A";
-            carA.CarPosition = (1, 1, Direction.N);
-            carA.Commands = "FFRF";
-
-            CarList.Add(carA);
-            */
-
             // select the longest command out of all the car commands
-
             var longestCommand = CarList.OrderByDescending(car => car.Commands.Length)
                         .Select(car => car.Commands)
                         .FirstOrDefault();
 
-            Console.WriteLine(longestCommand);
+            //Console.WriteLine(longestCommand);
 
+            int steps = 0;
+
+            // based on longest command to perform logic
             for (int i = 0; i < longestCommand.Length; i++)
             {
-                List<(string, int, int)> CarCompareList = new List<(string, int, int)>();
+                //List<(string, int, int)> CarCompareList = new List<(string, int, int)>();
+                // initliaze car list for comparision
+                List<Car> CarCompareList = new List<Car> { };
 
                 foreach (var car in CarList)
                 {
-                    var newPosition = MoveCar(car);
-
-                    CarCompareList.Add(newPosition);
+                    MoveCar(car);
+                    CarCompareList.Add(car);
                 }
 
+                steps += 1;
                 // after get all the Car New Position, compare and see whether do they collide with each other
-                var groupedCars = CarCompareList.GroupBy(car => new { car.Item2, car.Item3 })
+                var groupedCars = CarCompareList.GroupBy(car => new { car.CarPosition.x, car.CarPosition.y })
                                      .Where(group => group.Count() > 1)
                                      .ToList();
 
                 if (groupedCars.Count() > 0)
                 {
-                    Console.WriteLine("There are cars that will collide");
+                    //Console.WriteLine("There are cars that will collide");
 
                     foreach (var group in groupedCars)
                     {
-                        Console.WriteLine($"X: {group.Key.Item2}, Y: {group.Key.Item3}, Count : {group.Count()}");
+                        //Console.WriteLine($"X: {group.Key.x}, Y: {group.Key.y}, Count : {group.Count()}");
 
                         foreach (var car in group)
                         {
-                            Console.WriteLine($"Name: {car.Item1}");
+                            // Console.WriteLine($"Name: {car.CarName}");
+                            // set car to be crashed
+                            car.IsCrahsed = true;
+                            car.CrashedStep = steps;
+                            var x = CarCompareList.FindAll(target => target.CarName != car.CarName);
+                           
+                            string crashedWithCarName = string.Empty;
+
+                            foreach ( var y in x)
+                            {
+                                crashedWithCarName += y.CarName;
+                                crashedWithCarName += ",";
+                            }
+
+                            car.CrashedWithCar = crashedWithCarName;
+
                         }
                     }
                     successFlag = false;
@@ -116,16 +120,10 @@ namespace CarSimulation
                 }
             }
 
-            if (successFlag)
-            {
-                return CarList;
-
-            }
-
             return CarList;
         }
 
-        public (string CarName, int X, int Y ) MoveCar(Car car)
+        public void MoveCar(Car car)
         {
             // need to check the direction and how it move
             string currFacingDir;
@@ -134,12 +132,11 @@ namespace CarSimulation
             {
                 // Get the first character
                 char singleCmd = car.Commands[0];
-                Console.WriteLine("Cmd: " + singleCmd);
+                // Console.WriteLine($"Cmd for car {car.CarName} : {singleCmd} ");
 
                 // Remove the first character from the original string
                 car.Commands = car.Commands.Substring(1);
-                Console.WriteLine("Remaining cmd : " + car.Commands);
-
+                // Console.WriteLine($"Remaining cmd for car {car.CarName} : {car.Commands} ");
 
                 switch (singleCmd)
                 {
@@ -161,19 +158,16 @@ namespace CarSimulation
                         if (! isExceedBoundary)
                         {
                             car.CarPosition = (car.CarPosition.x + moveMapping[currFacingDir].Item1, car.CarPosition.y + moveMapping[currFacingDir].Item2, car.CarPosition.Item3);
-                           
                         }
 
                         break;
 
-
                     default:
+                        Console.WriteLine($"Not understand cmd - {singleCmd} as it is not in 'L' 'R' 'F'");
                         break;
 
                 }
             }
-
-            return (car.CarName, car.CarPosition.x, car.CarPosition.y);
         }
 
         public bool CheckExceedBoundary(int x, int y, string direction)

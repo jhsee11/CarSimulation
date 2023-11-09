@@ -12,7 +12,14 @@ namespace CarSimulation
 
 		public void AddCar ( Car newCar)
 		{
-			CarList.Add(newCar);
+            if ( (newCar.CarPosition.x <= FieldDimension.width - 1) && (newCar.CarPosition.y <= FieldDimension.height - 1) )
+            {
+                CarList.Add(newCar);
+            }
+            else
+            {
+                Console.WriteLine($"Failed to add car to field as it exceeds car field dimension {FieldDimension.width} X {FieldDimension.height}");
+            }
         }
 
         public Dictionary<string, Dictionary<string, string>> directionMapping = new Dictionary<string, Dictionary<string, string>>
@@ -101,18 +108,7 @@ namespace CarSimulation
                             // set car to be crashed
                             car.IsCrahsed = true;
                             car.CrashedStep = steps;
-                            var x = CarCompareList.FindAll(target => target.CarName != car.CarName);
-                           
-                            string crashedWithCarName = string.Empty;
-
-                            foreach ( var y in x)
-                            {
-                                crashedWithCarName += y.CarName;
-                                crashedWithCarName += ",";
-                            }
-
-                            car.CrashedWithCar = crashedWithCarName;
-
+                            string crashedWithCarName = string.Join(",", CarCompareList.FindAll(target => target.CarName != car.CarName).Select(x => x.CarName));
                         }
                     }
                     successFlag = false;

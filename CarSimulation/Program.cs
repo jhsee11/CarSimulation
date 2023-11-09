@@ -5,14 +5,14 @@ using static CarSimulation.Car;
 
 public class Program
 {
-    static int width;
-    static int height;
 
     public static void Main()
     {
         var startOverflag = true;
         CarField carField = new CarField();
         var commands = string.Empty;
+        int width = 0;
+        int height = 0;
 
         try
         {
@@ -20,16 +20,33 @@ public class Program
             {
                 if (startOverflag)
                 {
-                    Console.WriteLine("Welcome to Auto Driving Car Simulation");
-                    Console.WriteLine("Please enther the width and height of the simulation field in x y format");
-                    string input = Console.ReadLine();
+                    while (true)
+                    {
+                        Console.WriteLine("Welcome to Auto Driving Car Simulation");
+                        Console.WriteLine("Please enter the width and height of the simulation field in x y format");
+                        string input = Console.ReadLine();
 
-                    width = int.Parse(input.Split(" ")[0]);
-                    height = int.Parse(input.Split(" ")[1]);
+                        if (input.Split(" ").Length < 2)
+                        {
+                            Console.WriteLine("Number of input is incorrect. Please re-enter");
+                            continue;
+                        }
 
-                    carField.FieldDimension = (width - 1, height - 1);
+                        var input1 = input.Split(" ")[0];
+                        var input2 = input.Split(" ")[1];
 
-                    Console.WriteLine($"You have created a field {width} X {height} ");
+                        if ( (int.TryParse(input1, out width)) && (int.TryParse(input2, out height)) )
+                        {
+                            carField.FieldDimension = (width - 1, height - 1);
+                            Console.WriteLine($"You have created a field {width} X {height} ");
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input type. Please re-enter the dimension as number");
+                        }
+                    }
+
                 }
 
                 // Read input from the user
@@ -104,10 +121,11 @@ public class Program
                         }
 
                         // initialize car
-                        var newCar = new Car();
-                        newCar.CarName = carName;
-                        newCar.CarPosition = (carX, carY, (Direction)Enum.Parse(typeof(Direction), carDir));
-                        newCar.Commands = commands;
+                        var newCar = new Car(carName, (carX, carY, (Direction)Enum.Parse(typeof(Direction), carDir)), commands);
+
+                        //newCar.CarName = carName;
+                        //newCar.CarPosition = (carX, carY, (Direction)Enum.Parse(typeof(Direction), carDir));
+                        //newCar.Commands = commands;
 
                         carField.AddCar(newCar);
 
@@ -147,14 +165,14 @@ public class Program
                             
                         }
 
-                        Console.WriteLine("Please choose from the following options");
-                        Console.WriteLine("[1] Start over");
-                        Console.WriteLine("[2] Exit");
-
-                        var result = Console.ReadLine();
-
                         while (true)
                         {
+                            Console.WriteLine("Please choose from the following options");
+                            Console.WriteLine("[1] Start over");
+                            Console.WriteLine("[2] Exit");
+
+                            var result = Console.ReadLine();
+
                             if (result == "1")
                             {
                                 startOverflag = true;

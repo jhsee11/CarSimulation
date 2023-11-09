@@ -32,6 +32,13 @@ namespace CarSimulation
                 }
 			}
 		}
+
+		public Car (string carName, (int x, int y, Direction) carPosition, string commands)
+		{
+			CarName = carName;
+			CarPosition = carPosition;
+            Commands = commands;
+		}
 	}
 }
 

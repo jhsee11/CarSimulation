@@ -37,8 +37,14 @@ public class Program
 
                         if ( (int.TryParse(input1, out width)) && (int.TryParse(input2, out height)) )
                         {
+                            if (width <= 1 || height <= 1)
+                            {
+                                Console.WriteLine("Invalid input. Please re-enter dimension to be greater than 1");
+                                continue;
+                            }
+
                             carField.FieldDimension = (width - 1, height - 1);
-                            Console.WriteLine($"You have created a field {width} X {height} ");
+                            Console.WriteLine($"You have created a field of {width} X {height} ");
                             break;
                         }
                         else

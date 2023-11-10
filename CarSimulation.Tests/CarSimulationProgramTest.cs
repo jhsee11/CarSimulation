@@ -42,7 +42,7 @@ public class CarSimulationProgramTest
         var newCarField = new CarField();
         newCarField.FieldDimension = (5, 5);
 
-        var carA = new Car("A", (8, 9, Direction.E), "");
+        var carA = new Car("A", (6, 6, Direction.E), "");
 
         newCarField.AddCar(carA);
 
@@ -50,15 +50,15 @@ public class CarSimulationProgramTest
     }
 
     [Fact]
-    public void CreateCar_SetCarPosition_ReturnsCorrectCarPosition()
+    public void CreateCar_SetValidPosition_ReturnsCorrectCarPosition()
     {
         var carA = new Car("A", (1, 3, Direction.E), "");
 
-        Assert.Equal((1, 3, Car.Direction.N), carA.CarPosition);
+        Assert.Equal((1, 3, Car.Direction.E), carA.CarPosition);
     }
 
     [Fact]
-    public void CreateCar_SetWrongPosition_ThrowsException()
+    public void CreateCar_SetInvalidPosition_ThrowsException()
     {
         var carA = new Car("A", (3, 4, Direction.E), "");
 
@@ -76,9 +76,7 @@ public class CarSimulationProgramTest
         var newCarField = new CarField();
         newCarField.FieldDimension = (5, 5);
 
-        newCarField.AddCar(carA);
-
-        //Move Car will only execute 1 command
+        // Move Car will only execute 1 command
         newCarField.MoveCar(carA);
 
         Assert.Equal(3, carA.Commands.Length);
@@ -88,7 +86,6 @@ public class CarSimulationProgramTest
     [Fact]
     public void CheckExceedBoundary_ExceedBoundary_ReturnsCorrectResult()
     {
-
         Dictionary<string, Tuple<int, int>> moveMapping = new Dictionary<string, Tuple<int, int>>
         {
             {  "N", new Tuple<int,int>(0,1) },
@@ -106,9 +103,27 @@ public class CarSimulationProgramTest
     }
 
     [Fact]
+    public void CheckExceedBoundary_WhenAtOriginExceedBoundary_ReturnsCorrectResult()
+    {
+        Dictionary<string, Tuple<int, int>> moveMapping = new Dictionary<string, Tuple<int, int>>
+        {
+            {  "N", new Tuple<int,int>(0,1) },
+            {  "S", new Tuple<int,int>(0,-1) },
+            {  "W", new Tuple<int,int>(-1,0) },
+            {  "E", new Tuple<int,int>(1,0) }
+        };
+
+        var newCarField = new CarField();
+        newCarField.FieldDimension = (5, 5);
+
+        var isExceedBoundary = newCarField.CheckExceedBoundary(0, 0, "W");
+
+        Assert.Equal(true, isExceedBoundary);
+    }
+
+    [Fact]
     public void CheckExceedBoundary_WithinBoundary_ReturnsCorrectResult()
     {
-
         Dictionary<string, Tuple<int, int>> moveMapping = new Dictionary<string, Tuple<int, int>>
         {
             {  "N", new Tuple<int,int>(0,1) },
@@ -164,7 +179,7 @@ public class CarSimulationProgramTest
         var carA = new Car("A", (5, 5, Direction.N), "LFFF");
 
         var newCarField = new CarField();
-        newCarField.FieldDimension = (5, 5);
+        newCarField.FieldDimension = (8, 8);
 
         newCarField.AddCar(carA);
 
@@ -229,7 +244,6 @@ public class CarSimulationProgramTest
         newCarField.FieldDimension = (100, 100);
 
         newCarField.AddCar(carA);
-
         newCarField.AddCar(carB);
 
         var carList = newCarField.RunSimulation();
@@ -265,7 +279,6 @@ public class CarSimulationProgramTest
         newCarField.FieldDimension = (100, 100);
 
         newCarField.AddCar(carA);
-
         newCarField.AddCar(carB);
 
         var carList = newCarField.RunSimulation();

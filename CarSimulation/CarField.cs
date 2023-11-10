@@ -12,7 +12,7 @@ namespace CarSimulation
 
 		public void AddCar ( Car newCar)
 		{
-            if ( (newCar.CarPosition.x <= FieldDimension.width - 1) && (newCar.CarPosition.y <= FieldDimension.height - 1) )
+            if ( (newCar.CarPosition.x <= FieldDimension.width ) && (newCar.CarPosition.y <= FieldDimension.height ) )
             {
                 CarList.Add(newCar);
             }
